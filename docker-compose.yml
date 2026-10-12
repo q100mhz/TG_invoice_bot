@@ -1,11 +1,15 @@
 services:
+  tor:
+    image: dperson/torproxy:latest
+    container_name: tg_tor_proxy
+    restart: always
+
   bot:
     build: .
     container_name: tg_invoice_bot
     restart: always
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    depends_on:
+      - tor
     env_file:
       - .env
     volumes:
