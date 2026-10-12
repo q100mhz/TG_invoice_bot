@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
+from aiogram.client.session.aiohttp import AiohttpSession
 from src.config import settings
 from src.database import init_db
 from src.handlers import router
@@ -13,11 +14,17 @@ async def main():
     
     init_db()
     
-    bot = Bot(token=settings.bot_token)
+    # Если в .env указан PROXY_URL, пускаем сессию через него
+    if settings.proxy_url:
+        logging.info(f"Запуск через прокси: {settings.proxy_url}")
+        session = AiohttpSession(proxy=settings.proxy_url)
+        bot = Bot(token=settings.bot_token, session=session)
+    else:
+        bot = Bot(token=settings.bot_token)
+
     dp = Dispatcher()
     dp.include_router(router)
     
-    # Сбрасываем старый вебхук и зависшие сообщения
     await bot.delete_webhook(drop_pending_updates=True)
     
     logging.info("Бот успешно запущен и ожидает входящих сообщений...")

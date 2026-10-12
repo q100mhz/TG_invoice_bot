@@ -1,8 +1,9 @@
-import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Optional
 
 class Settings(BaseSettings):
     bot_token: str
+    proxy_url: Optional[str] = None
 
     model_config = SettingsConfigDict(
         env_file=".env",
