@@ -3,6 +3,9 @@ services:
     image: dperson/torproxy:latest
     container_name: tg_tor_proxy
     restart: always
+    environment:
+      - TOR_PORT=9050
+      - HTTP_PROXY=8118
 
   bot:
     build: .
